@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<!--        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"-->
+<!--        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="templates/templLayout.xhtml">
+    <ui:define name="head">
+        <title>Welcome-page</title>
+    </ui:define>
+
+    <ui:define name="body" >
+
+
+        <div id="welcome-content" >
+            <h3 class="text-class"> Welcome on web-site!</h3>
+            <h:link styleClass="text-class" outcome="redir-main">
+                <h4>Move main page </h4>
+            </h:link>
+
+            <div class="chronos">
+                <span id = "clock">Wait 5 sec for clock...</span>
+                <span id = "date"></span>
+            </div>
+
+        </div>
+
+        <script type="text/javascript" src="resources/js/clock.js"></script>
+    </ui:define>
+
+</ui:composition>
+
+</html>

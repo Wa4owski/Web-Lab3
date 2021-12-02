@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<!--        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"-->
+<!--        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="templates/templLayout.xhtml">
+
+    <ui:define name="head">
+        <title>Welcome page</title>
+    </ui:define>
+
+    <ui:define name="body">
+
+        <section class="content">
+            <br/>
+            <h:link  styleClass="text-class" outcome="redir-index">
+                <h4>Move main page </h4>
+            </h:link>
+            <div style="position: relative; text-align: center">
+                <canvas id="graph-canvas" width="500px" height="500px">Интерактивная область графика</canvas>
+            </div>
+
+
+
+            <br/>
+
+            <div id="values">
+                <header>
+                    <h2 class="card-header">Values</h2>
+                </header>
+                <!--                        <tr>-->
+                <h:form id="form">
+                    <table id="input-grid">
+                        <tbody>
+                        <!-- X Value -->
+
+                        <tr>
+                            <td class="input-grid-label">
+                                <label> <!--for="x-buttons"-->X: </label>
+                            </td>
+
+                            <td class="param-row">
+                                <div class="x-param">
+
+                                    <c:forEach var="i" begin="0" end="8" step="1">
+                                        <p:commandLink styleClass="x-group" >
+                                            <h:outputText styleClass="x-text" value="#{i-5}"/>
+                                        </p:commandLink>
+                                    </c:forEach>
+                                    <h:inputHidden id="x-hidden"
+                                                   value="#{pointBean.x}"
+                                                   required="true"
+                                                   requiredMessage="Выберите X">
+
+                                    </h:inputHidden>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Y Value -->
+                        <tr>
+                            <td class="input-grid-label">
+                                <label for="y-param">Y:</label>
+                            </td>
+
+                            <td class="input-grid-value">
+                                <p:inputText id="y-param"
+                                             maxlength="10"
+                                             value="#{pointBean.y}"
+                                             requiredMessage="Введите Y"
+                                             validatorMessage="Y не входит в интервал -5 to 5"
+                                             converterMessage="Y не является числом"
+                                             autocomplete="off"
+                                             placeholder="Number from -5 to 5...">
+                                    <f:validateRequired/>
+                                    <f:validateDoubleRange minimum="-5" maximum="5"/>
+                                </p:inputText>
+                            </td>
+                        </tr>
+
+                        <!-- R Value -->
+                        <tr>
+                            <td class="input-grid-label">
+                                <label>R:</label>
+                            </td>
+
+                            <td class="input-grid-value">
+                                <!--                            <h:inputText id="r-param"-->
+                                <!--                                         maxlength="10"-->
+                                <!--                                         value="#{pointBean.r}"-->
+                                <!--                                         requiredMessage="Введите R"-->
+                                <!--                                         validatorMessage="R не входит в интервал 2 to 5"-->
+                                <!--                                         converterMessage="R не является числом"-->
+                                <!--                                         autocomplete="off"-->
+                                <!--                                         placeholder="Number from 2 to 5...">-->
+                                <!--                                <f:validateRequired/>-->
+                                <!--                                <f:validateDoubleRange minimum="2" maximum="5"/>-->
+                                <!--                            </h:inputText>-->
+
+                                <!--                            <h:inputText id="R_value"-->
+                                <!--                                         styleClass="sliderValue"-->
+                                <!--                                         value="#{pointBean.r}"-->
+                                <!--                                         required="true"-->
+                                <!--                                         requiredMessage="Введите координату R!"-->
+                                <!--                                         converterMessage="Параметр R задается действительным числом!"-->
+                                <!--                                         validatorMessage="Параметр R задается числом в промежутке [2...5]!">-->
+                                <!--                                <f:validateDoubleRange minimum="2" maximum="5"/>-->
+                                <!--                            </h:inputText>-->
+                                <!--                            <p:slider id="slider" for="R_value" styleClass="slider" minValue="2" maxValue="5" step="0.1"-->
+                                <!--                                      onSlide="switchRadius(),-->
+                                <!--                          injectRAlert(document.getElementById('form:R_value'))"-->
+                                <!--                                      onSlideEnd="switchRadius()"/>-->
+
+                                <div id="sliderBlock">
+                                    <p:inputText id="r_hidden" value="#{pointBean.r}" style="display: none"  onkeyup="alert('scf')" onchange="alert('hidd')"/>
+                                    <p:inputText id="r_input" value="#{pointBean.r}" required="true" onchange="alert('onch')" onkeyup="alert('keyUp')">
+                                        <f:validateRequired/>
+                                        <f:validateDoubleRange minimum="2" maximum="5"/>
+                                    </p:inputText>
+                                    <p:slider id="r_slider" styleClass="slider" for="r_input" minValue="2.0" maxValue="5.0" step="0.1" onSlide="redrawS();">
+                                        <p:ajax event="slideEnd" listener="#{pointBean.onSlideEnd}" update="r_hidden" />
+                                    </p:slider>
+                                </div>
+                                <!--redrawS(#{pointBean.r});-->
+
+                                <!--                                <h:panelGrid columns="1" style="margin-bottom: 10px">-->
+                                <!--                                    <p:inputText id="txt" value="#{sliderView.number}"/>-->
+                                <!--                                    <p:slider for="txt" range="false"/>-->
+                                <!--                                </h:panelGrid>-->
+
+
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p:messages id="errors"/>
+                    <p:commandButton ajax="false" process="@form " styleClass="submit" id="submitButton" type="Submit" value="Submit" action="#{pointBean.addPoint}"
+                                     update="jsf_table"  />
+                    <!--                    <f:ajax execute="@form jsf_table" onevent="drawPoint()" />-->
+
+                    <!--                                         update="@form jsf_table"/>-->
+                    <!--  drawPoint(#{point.x}, #{point.y}, #{point.hit});-->
+                    <!--                    <h:outputScript library="js" name="main.js"/>-->
+                    <!--                    <h:outputScript library="js" name="graph.js"/>-->
+                    <!--                    <script type="text/javascript" src="resources/js/main.js"></script>-->
+                </h:form>
+
+
+                <!--                <input class="button" type="submit" value="Submit" onclick="submit()"/>-->
+                <!--                <input class="button" type="reset" value="Reset" onclick="reset()"/>-->
+                <!--                </h:form>-->
+
+
+                <!--                        </tr>-->
+
+            </div>
+
+
+            <br/> <br/> <br/>
+
+
+
+            <!--            <ul id="errors" style="list-style-type: none"></ul>-->
+            <h:panelGroup layout="block" id="jsf_table" style="width: 100%; margin-top: 16px">
+                <div id="outputContainer">
+                    <table id="result-table">
+                        <tr class="table-header">
+                            <th class="coords-col">X</th>
+                            <th class="coords-col">Y</th>
+                            <th class="coords-col">R</th>
+                            <th class="time-col">Время запроса</th>
+                            <th class="hitres-col">Попадание</th>
+                        </tr>
+                        <ui:repeat value="#{pointBean.points}" var="p">
+                            <tr class="#{p.hit? 'hit-yes': 'hit-no'}">
+                                <td class="table-x-value">#{p.x}</td>
+                                <td class="table-y-value">#{p.y}</td>
+                                <td class="table-r-value">#{p.r}</td>
+                                <td>#{p.currentTime}</td>
+                                <td class="table-hit-value" onchange="drawPoint()">#{(p.hit? "Да" : "Нет")}</td>
+                            </tr>
+                        </ui:repeat>
+                    </table>
+                </div>
+            </h:panelGroup>
+
+
+
+        </section>
+
+
+        <script type="text/javascript" src="resources/js/main.js"></script>
+        <script type="text/javascript" src="resources/js/graph.js"></script>
+
+
+    </ui:define>
+
+</ui:composition>
+
+</html>
